@@ -6,7 +6,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ['url', 'id', 'username', 'books']
+        fields = ['url', 'id', 'username', 'books', 'owner', 'private']
 
 
 class BookSerializer(serializers.HyperlinkedModelSerializer):
@@ -20,4 +20,4 @@ class NoteSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Note
-        fields = ['book', 'owner', 'title', 'text', 'private']
+        fields = ['book', 'title', 'text']
