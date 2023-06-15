@@ -7,18 +7,10 @@ from django.contrib.auth.models import AbstractUser
 
 class Book(models.Model):
     FEATURED_CHOICES = [(False, 'No'), (True, 'Yes')]
-
-    READ = 'Read'
-    READING = 'Reading'
-    WANT_TO_READ = "Want to read"
-    # DJANGOFILTERBACKEND
-    # NOT_INTERESTED = 'Not interested'
-    # STATUS_CHOICES = [(READ, 'Read'), (READING, 'Reading'),
-    #                   (WANT_TO_READ, 'Want to read'), (NOT_INTERESTED, 'Not interest')]
-    # status = models.ChoiceField(null=True, blank=True, choices=STATUS_CHOICES)
     title = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
     featured = models.BooleanField(default=False, choices=FEATURED_CHOICES)
+    # followers = models.TextField()
 
     def __str__(self):
         return self.title
@@ -37,8 +29,9 @@ class Note(models.Model):
 
 
 class User(AbstractUser):
-    books = models.ManyToManyField(Book)
     private = models.ForeignKey(
         to=Note, on_delete=models.CASCADE, related_name='private_note')
-    owner = models.ForeignKey(
-        to=Note, on_delete=models.CASCADE, related_name='note_owner')
+    notes = models.ForeignKey(
+        to=Note, on_delete=models.CASCADE, related_name='notes')
+    books = models.ManyToManyField(Book)
+    # follow_list = models.TextField()
