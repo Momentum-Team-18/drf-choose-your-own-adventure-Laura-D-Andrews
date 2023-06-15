@@ -6,20 +6,20 @@ class BookSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Book
-        fields = ['title', 'author', 'featured']
-
-
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    # books = serializers.RelatedField(many=True)
-    # owner = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'books', 'notes']
+        fields = ['url', 'title', 'author', 'featured']
 
 
 class NoteSerializer(serializers.HyperlinkedModelSerializer):
+    private = serializers.ChoiceField(Note.STATUS_CHOICES)
 
     class Meta:
         model = Note
-        fields = ['book', 'title', 'text', 'user']
+        fields = ['url', 'book', 'title', 'text', 'private']
+
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    notes = NoteSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['url', 'id', 'username', 'notes', 'following']

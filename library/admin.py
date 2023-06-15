@@ -4,3 +4,4 @@ from .models import User, Book, Note
 admin.site.register(User)
 admin.site.register(Book)
 admin.site.register(Note)
+# admin.site.register(Status)
