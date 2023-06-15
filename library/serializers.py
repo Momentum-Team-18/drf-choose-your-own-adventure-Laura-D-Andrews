@@ -11,15 +11,15 @@ class BookSerializer(serializers.HyperlinkedModelSerializer):
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     # books = serializers.RelatedField(many=True)
-    note = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    # owner = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'note', 'private']
+        fields = ['id', 'username', 'books', 'notes']
 
 
 class NoteSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Note
-        fields = ['book', 'title', 'text']
+        fields = ['book', 'title', 'text', 'user']

@@ -10,28 +10,27 @@ class Book(models.Model):
     title = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
     featured = models.BooleanField(default=False, choices=FEATURED_CHOICES)
-    # followers = models.TextField()
-
-    def __str__(self):
-        return self.title
-
-
-class Note(models.Model):
-    NOTE_CHOICES = [(False, 'Public'), (True, 'Private')]
-    private = models.BooleanField(default=True, choices=NOTE_CHOICES)
-    title = models.CharField(max_length=100)
-    text = models.TextField()
-    book = models.ForeignKey(
-        to=Book, on_delete=models.CASCADE, related_name='book_note')
 
     def __str__(self):
         return self.title
 
 
 class User(AbstractUser):
-    private = models.ForeignKey(
-        to=Note, on_delete=models.CASCADE, related_name='private_note')
-    notes = models.ForeignKey(
-        to=Note, on_delete=models.CASCADE, related_name='notes')
-    books = models.ManyToManyField(Book)
-    # follow_list = models.TextField()
+    books = models.ManyToManyField(Book, blank=True, null=True)
+    notes = models.TextField(blank=True, null=True)
+
+
+class Note(models.Model):
+    title = models.CharField(max_length=100)
+    text = models.TextField()
+    book = models.ForeignKey(
+        to=Book, on_delete=models.CASCADE, related_name='book_note')
+    user = models.ForeignKey(
+        to=User, on_delete=models.CASCADE, related_name="user_note",
+        blank=True, null=True)
+
+    STATUS_CHOICES = [(False, 'Public'), (True, 'Private')]
+    status = models.BooleanField(default=True, choices=STATUS_CHOICES)
+
+    def __str__(self):
+        return self.title

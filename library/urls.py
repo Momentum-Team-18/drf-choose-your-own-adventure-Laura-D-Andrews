@@ -14,6 +14,7 @@ router.register(r'notes', views.NoteViewSet, basename='note')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    # path('accounts/', include('registration.backends.simple.urls')),
 ]
 
 # urlpatterns = [
