@@ -5,7 +5,6 @@ from library import views
 from django.contrib import admin
 
 router = DefaultRouter()
-
 router.register(r'notes', views.NoteViewSet,
                 basename='note'),
 router.register(r'books', views.BookViewSet,
@@ -14,11 +13,10 @@ router.register(r'users', views.UserViewSet,
                 basename='user'),
 router.register(r'featured/books', views.FeaturedBooksViewSet,
                 basename='featured-books')
+router.register(r'profile', views.UserProfileViewSet, basename='profile')
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
 ]
-
-

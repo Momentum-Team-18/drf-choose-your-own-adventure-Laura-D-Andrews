@@ -26,13 +26,24 @@ class UserListInstanceSerializer(serializers.HyperlinkedModelSerializer):
     '''
     class Meta:
         model = User
-        read_only_fields = ['__all__']
+        fields = ['username']
+
+# need to add public notes and filter for only username?
+
+
+class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
+    '''
+    User profile serializer with all User model info
+    '''
+    class Meta:
+        model = User
         exclude = ['password']
+# need to add public and private notes and books and restrict permissions so that only user can see their profile
 
 
 class FeaturedBooksSerializer(serializers.HyperlinkedModelSerializer):
     '''
-    Serializer to display books filtered via featured (featured books)
+    Serializer to display 'featured' books list filtered via view with boolean(featured=True)
     '''
     class Meta:
         model = Book

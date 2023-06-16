@@ -7,6 +7,7 @@ from django.contrib.auth.models import AbstractUser
 
 class Book(models.Model):
     FEATURED_CHOICES = [(False, 'No'), (True, 'Yes')]
+
     book_title = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
     featured = models.BooleanField(default=False, choices=FEATURED_CHOICES)
