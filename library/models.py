@@ -10,7 +10,7 @@ class Book(models.Model):
     book_title = models.CharField(max_length=100)
     author = models.CharField(max_length=100)
     featured = models.BooleanField(default=False, choices=FEATURED_CHOICES)
-    year = models.IntegerField()
+    year = models.IntegerField(null=True, blank=True)
 
     def __str__(self):
         return self.book_title

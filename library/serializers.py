@@ -28,3 +28,12 @@ class UserListInstanceSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         read_only_fields = ['__all__']
         exclude = ['password']
+
+
+class FeaturedBooksSerializer(serializers.HyperlinkedModelSerializer):
+    '''
+    Serializer to display books filtered via featured (featured books)
+    '''
+    class Meta:
+        model = Book
+        fields = ['url', 'book_title', 'author', 'featured']
