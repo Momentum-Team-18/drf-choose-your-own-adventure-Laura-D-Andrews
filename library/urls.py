@@ -5,13 +5,37 @@ from library import views
 from django.contrib import admin
 
 router = DefaultRouter()
-router.register(r'users', views.UserViewSet, basename='user')
-router.register(r'books', views.BookViewSet, basename='book')
-router.register(r'notes', views.NoteViewSet, basename='note')
-router.register(r'usernote', views.UserNoteViewset, basename='user-note')
 
-# router.register(r'user/books', views.UserBooksViewSet, basename='user-books')
-# router.register(r'user/notes', views.UserNotesViewSet, basename='user-notes')
+router.register(r'notes', views.NoteViewSet,
+                basename='note'),
+router.register(r'books', views.BookViewSet,
+                basename='book'),
+router.register(r'users', views.UserViewSet,
+                basename='user'),
+# router.register(r'users/admin', views.UserAdminViewSet, basename='user-admin'),
+# router.register(r'private/profile',
+#                 views.UserPrivateProfileViewSet, basename='user-private'),
+# router.register(r'public/profile',
+#                 views.UserPublicProfileViewSet, basename='user-public'),
+# router.register(r'notes', views.NoteViewSet, basename='notes'),
+# router.register(r'books', views.BookBasicInfoViewSet, basename='book'),
+# router.register(r'book/profile',
+#                 views.BookDetailedProfileViewSet, basename='book-profile'),
+# router.register(r'books/featured', views.BookFeaturedViewSet, basename='book-featured'),
+
+# router = DefaultRouter()
+# router.register(r'users', views.UserBasicViewSet,
+#                 basename='user'),
+# router.register(r'users/details', views.UserAllTheDetailsViewSet,
+#                 basename='users-details'),
+# router.register(r'books', views.BookViewSet, basename='book'),
+# router.register(r'notes', views.NoteBasicViewSet, basename='note'),
+# router.register(r'note/details', views.NoteAllTheDetailsViewSet,
+#                 basename='note-details')
+# router.register(r'user/notes', views.UserNotesViewset, basename='users-notes')
+
+# user basic, user detail, book, note basic, note detail
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -2,37 +2,29 @@ from .models import User, Book, Note
 from rest_framework import serializers
 
 
-class NoteSerializer(serializers.HyperlinkedModelSerializer):
-    private = serializers.ChoiceField(Note.STATUS_CHOICES)
-
+class NoteListInstanceSerializer(serializers.HyperlinkedModelSerializer):
+    '''
+    Basic serializer for Note model, objects.all queryset, links to note list and note instance
+    '''
     class Meta:
         model = Note
-        fields = ['url', 'book', 'note_title', 'text', 'user', 'private']
+        fields = ['url', 'note_title', 'public_note_text', 'book', 'user']
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    note_title = NoteSerializer(read_only=True)
-
-    class Meta:
-        model = User
-        fields = ['url', 'id', 'username', 'following', 'note_title']
-
-
-class BookSerializer(serializers.HyperlinkedModelSerializer):
-    note_title = NoteSerializer(many=True, read_only=True)
-
+class BookListInstanceSerializer(serializers.HyperlinkedModelSerializer):
+    '''
+    Basic serializer for Book model, objects.all queryset, links to book list and book instance
+    '''
     class Meta:
         model = Book
-        fields = ['url', 'title', 'note_title', 'author']
+        fields = ['url', 'book_title', 'author', 'year', 'featured']
 
 
-class UserNoteSerializer(serializers.HyperlinkedModelSerializer):
+class UserListInstanceSerializer(serializers.HyperlinkedModelSerializer):
     '''
-    Serializer to nest/display user-specific notes on the User instance
+    Basic serializer for User model, objects.all queryset, links to user list and user instance
     '''
-    note_title = NoteSerializer(read_only=True)
-    # note_title = NoteSerializer(many=True, read_only=True)
-
     class Meta:
         model = User
-        fields = ['note_title']
+        read_only_fields = ['__all__']
+        exclude = ['password']
