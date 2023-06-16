@@ -15,19 +15,22 @@ class Book(models.Model):
         return self.title
 
 
+class User(AbstractUser):
+    following = models.ManyToManyField(Book, blank=True, null=True)
+    note_title = models.ForeignKey(
+        to='Note', on_delete=models.CASCADE, related_name='related_user_notes')
+
+
 class Note(models.Model):
-    title = models.CharField(max_length=100)
+    note_title = models.CharField(max_length=100)
     text = models.TextField()
     book = models.ForeignKey(
-        to=Book, on_delete=models.CASCADE, related_name='book_notes')
+        to=Book, on_delete=models.CASCADE, related_name='related_book')
 
     STATUS_CHOICES = [(False, 'Public'), (True, 'Private')]
     private = models.BooleanField(default=True, choices=STATUS_CHOICES)
+    user = models.ForeignKey(
+        to=User, on_delete=models.CASCADE, related_name='related_user_notes')
 
     def __str__(self):
-        return self.title
-
-
-class User(AbstractUser):
-    following = models.ManyToManyField(Book, blank=True, null=True)
-    notes = models.ManyToManyField(Note, blank=True, null=True)
+        return self.note_title
