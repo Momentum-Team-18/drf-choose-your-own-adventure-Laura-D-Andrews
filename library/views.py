@@ -25,7 +25,9 @@ class UserProfileViewSet(viewsets.ReadOnlyModelViewSet):
     '''
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
-    # add permission so only user can see
+
+    # def get_queryset(self):
+    #     return self.request.user.all()
 
 
 class UserReadViewSet(viewsets.ModelViewSet):
