@@ -21,8 +21,6 @@ env = environ.Env(
     RENDER=(bool, False),
 )
 
-if env('RENDER'):
-    ALLOWED_HOSTS.append(env("RENDER_EXTERNAL_HOSTNAME"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -42,10 +40,17 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+if env('RENDER'):
+    ALLOWED_HOSTS.append(env("RENDER_EXTERNAL_HOSTNAME"))
+    DJANGO_SUPERUSER_USERNAME = env("DJANGO_SUPERUSER_USERNAME")
+    DJANGO_SUPERUSER_PASSWORD = env("DJANGO_SUPERUSER_PASSWORD")
+    DJANGO_SUPERUSER_EMAIL = env("DJANGO_SUPERUSER_EMAIL")
+
 
 # Application definition
 
 INSTALLED_APPS = [
+    'registration',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -95,9 +100,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': env.db()
-
-    # 'ENGINE': 'django.db.backends.sqlite3',
-    # 'NAME': BASE_DIR / 'db.sqlite3',
 }
 
 
@@ -155,9 +157,3 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
-
-if env("RENDER"):
-    ALLOWED_HOSTS.append(env("RENDER_EXTERNAL_HOSTNAME"))
-    DJANGO_SUPERUSER_USERNAME = env("DJANGO_SUPERUSER_USERNAME")
-    DJANGO_SUPERUSER_PASSWORD = env("DJANGO_SUPERUSER_PASSWORD")
-    DJANGO_SUPERUSER_EMAIL = env("DJANGO_SUPERUSER_EMAIL")
