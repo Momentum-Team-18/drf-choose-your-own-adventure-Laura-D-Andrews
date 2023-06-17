@@ -1,4 +1,4 @@
-from .models import User, Book, Note
+from .models import User, Book, Note, Status
 from rest_framework import serializers
 
 
@@ -48,3 +48,31 @@ class FeaturedBooksSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Book
         fields = ['url', 'book_title', 'author', 'featured']
+
+
+class UserReadSerializer(serializers.HyperlinkedModelSerializer):
+    '''
+    Serializer to display book user has read
+    '''
+
+    class Meta:
+        model = Status
+        fields = ['read', 'user', 'book']
+
+
+class UserReadingSerializer(serializers.HyperlinkedModelSerializer):
+    '''
+    Serializer to display book user is reading
+    '''
+    class Meta:
+        model = Status
+        fields = ['reading', 'user', 'book']
+
+
+class UserWantToReadSerializer(serializers.HyperlinkedModelSerializer):
+    '''
+    Serializer to display book user wants to read
+    '''
+    class Meta:
+        model = Status
+        fields = ['want_to_read', 'user', 'book']

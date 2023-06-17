@@ -8,7 +8,7 @@ from django.contrib.auth.models import AbstractUser
 class Book(models.Model):
     FEATURED_CHOICES = [(False, 'No'), (True, 'Yes')]
 
-    book_title = models.CharField(max_length=100)
+    book_title = models.CharField(max_length=100, verbose_name="title")
     author = models.CharField(max_length=100)
     featured = models.BooleanField(default=False, choices=FEATURED_CHOICES)
     year = models.IntegerField(null=True, blank=True)
@@ -21,12 +21,14 @@ class Note(models.Model):
     user = models.ForeignKey(
         to='User', on_delete=models.CASCADE,
         related_name='user_related_to_note')
-    note_title = models.CharField(max_length=100)
+    note_title = models.CharField(max_length=100, verbose_name="title")
     book = models.ForeignKey(
         to=Book, on_delete=models.CASCADE,
         related_name='book_related_to_note')
-    private_note_text = models.TextField(null=True, blank=True)
-    public_note_text = models.TextField(null=True, blank=True)
+    private_note_text = models.TextField(
+        null=True, blank=True, verbose_name="Public comments")
+    public_note_text = models.TextField(
+        null=True, blank=True, verbose_name="Private comments")
 
     def __str__(self):
         return self.note_title
@@ -34,3 +36,21 @@ class Note(models.Model):
 
 class User(AbstractUser):
     following = models.ManyToManyField(Book, blank=True, null=True)
+
+
+class Status(models.Model):
+    STATUS_CHOICES = [(False, 'No'), (True, 'Yes')]
+    follow_status = models.CharField(max_length=30, default='Follow Status')
+    read = models.BooleanField(default=False, choices=STATUS_CHOICES)
+    reading = models.BooleanField(default=False, choices=STATUS_CHOICES)
+    want_to_read = models.BooleanField(
+        default=False, verbose_name="Want to read", choices=STATUS_CHOICES)
+    user = models.ForeignKey(
+        to='User', on_delete=models.CASCADE,
+        related_name='user_relation_to_status')
+    book = models.ForeignKey(
+        to=Book, on_delete=models.CASCADE,
+        related_name='book_status')
+
+    def __str__(self):
+        return self.follow_status

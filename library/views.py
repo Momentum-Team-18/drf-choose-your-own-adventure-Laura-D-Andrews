@@ -1,8 +1,8 @@
 from rest_framework.decorators import action
 from rest_framework import viewsets
-from .models import User, Book, Note
+from .models import User, Book, Note, Status
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from library.serializers import UserProfileSerializer, FeaturedBooksSerializer, NoteListInstanceSerializer, BookListInstanceSerializer, UserListInstanceSerializer
+from library.serializers import UserWantToReadSerializer, UserReadingSerializer, UserReadSerializer, UserProfileSerializer, FeaturedBooksSerializer, NoteListInstanceSerializer, BookListInstanceSerializer, UserListInstanceSerializer
 
 
 class FeaturedBooksViewSet(viewsets.ModelViewSet):
@@ -14,6 +14,40 @@ class FeaturedBooksViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         featured_books = Book.objects.filter(featured=True)
         return featured_books
+
+
+class UserReadViewSet(viewsets.ModelViewSet):
+    '''
+    filters Status model for attribute read=True
+    '''
+    serializer_class = UserReadSerializer
+
+    def get_queryset(self):
+        books_read = Status.objects.filter(read=True)
+        return books_read
+# how to filter for just signed in user
+
+
+class UserReadingViewSet(viewsets.ModelViewSet):
+    '''
+    filters Status model for attribute reading=True
+    '''
+    serializer_class = UserReadingSerializer
+
+    def get_queryset(self):
+        books_reading = Status.objects.filter(reading=True)
+        return books_reading
+
+
+class UserWantToReadViewSet(viewsets.ModelViewSet):
+    '''
+    filters Status model for attribute want_to_read=True
+    '''
+    serializer_class = UserWantToReadSerializer
+
+    def get_queryset(self):
+        want_to_read_books = Status.objects.filter(want_to_read=True)
+        return want_to_read_books
 
 
 class NoteViewSet(viewsets.ModelViewSet):
