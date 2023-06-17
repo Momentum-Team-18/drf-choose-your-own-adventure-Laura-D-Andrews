@@ -5,58 +5,62 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from library.serializers import UserWantToReadSerializer, UserReadingSerializer, UserReadSerializer, UserProfileSerializer, FeaturedBooksSerializer, NoteListInstanceSerializer, BookListInstanceSerializer, UserListInstanceSerializer
 
 
-class FeaturedBooksViewSet(viewsets.ModelViewSet):
-    '''
-    filters Book model for attribute featured = True 
-    '''
-    serializer_class = FeaturedBooksSerializer
+'''
+user viewsets
+'''
 
-    def get_queryset(self):
-        featured_books = Book.objects.filter(featured=True)
-        return featured_books
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    '''
+    receives and returns request for hopefully only username
+    '''
+    queryset = User.objects.values('username')
+    serializer_class = UserListInstanceSerializer
+    permission_classes = [IsAuthenticated]
+
+
+class UserProfileViewSet(viewsets.ReadOnlyModelViewSet):
+    '''
+    receives and returns request for all User objects
+    '''
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+    # add permission so only user can see
 
 
 class UserReadViewSet(viewsets.ModelViewSet):
     '''
-    filters Status model for attribute read=True
+    filters Status model for signed in user and for attribute read=True
     '''
     serializer_class = UserReadSerializer
 
     def get_queryset(self):
-        books_read = Status.objects.filter(read=True)
-        return books_read
-# how to filter for just signed in user
+        return self.request.user.user_relation_to_status.filter(read=True)
 
 
 class UserReadingViewSet(viewsets.ModelViewSet):
     '''
-    filters Status model for attribute reading=True
+    filters Status model for signed in user and for attribute reading=True
     '''
     serializer_class = UserReadingSerializer
 
     def get_queryset(self):
-        books_reading = Status.objects.filter(reading=True)
-        return books_reading
+        return self.request.user.user_relation_to_status.filter(reading=True)
 
 
 class UserWantToReadViewSet(viewsets.ModelViewSet):
     '''
-    filters Status model for attribute want_to_read=True
+    filters Status model for signed in user attribute want_to_read=True
     '''
     serializer_class = UserWantToReadSerializer
 
     def get_queryset(self):
-        want_to_read_books = Status.objects.filter(want_to_read=True)
-        return want_to_read_books
+        return self.request.user.user_relation_to_status.filter(want_to_read=True)
 
 
-class NoteViewSet(viewsets.ModelViewSet):
-    '''
-    receives and returns request for all Note objects
-    '''
-    queryset = Note.objects.all()
-    serializer_class = NoteListInstanceSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+'''
+book view sets
+'''
 
 
 class BookViewSet(viewsets.ModelViewSet):
@@ -68,19 +72,26 @@ class BookViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
 
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
+class FeaturedBooksViewSet(viewsets.ModelViewSet):
     '''
-    receives and returns request for hopefully only username
+    filters Book model for attribute featured = True 
     '''
-    queryset = User.objects.all()
-    serializer_class = UserListInstanceSerializer
-    # permission_classes = [IsAuthenticated]
+    serializer_class = FeaturedBooksSerializer
+
+    def get_queryset(self):
+        featured_books = Book.objects.filter(featured=True)
+        return featured_books
 
 
-class UserProfileViewSet(viewsets.ReadOnlyModelViewSet):
+'''
+note viewsets
+'''
+
+
+class NoteViewSet(viewsets.ModelViewSet):
     '''
-    receives and returns request for all User objects
+    receives and returns request for all Note objects
     '''
-    queryset = User.objects.all()
-    serializer_class = UserProfileSerializer
-    # add permission so only user can see
+    queryset = Note.objects.all()
+    serializer_class = NoteListInstanceSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]

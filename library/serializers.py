@@ -22,11 +22,20 @@ class BookListInstanceSerializer(serializers.HyperlinkedModelSerializer):
 
 class UserListInstanceSerializer(serializers.HyperlinkedModelSerializer):
     '''
-    Basic serializer for User model, objects.all queryset, links to user list and user instance
+    Basic list serializer for User model, view filters to only User model username
     '''
     class Meta:
         model = User
-        fields = ['username']
+        fields = ['username', 'last_name']
+
+
+# class UserListInstanceSerializer(serializers.HyperlinkedModelSerializer):
+#     '''
+#     Basic list serializer for User model, view filters to only User model username
+#     '''
+#     class Meta:
+#         model = User
+#         fields = ['username', 'last_name']
 
 # need to add public notes and filter for only username?
 
