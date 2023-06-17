@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 
 # Change this to reflect your app's name and name of your custom User model
 from library.models import User
-from library import settings  # Change this to reflect your app's name
+from config import settings  # Change this to reflect your app's name
 
 
 # To run this management command:
