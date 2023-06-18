@@ -2,7 +2,7 @@ from rest_framework.decorators import action
 from rest_framework import viewsets
 from .models import User, Book, Note, Status
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
-from library.serializers import UserProfileSerializer, FeaturedBooksSerializer, NoteListInstanceSerializer, BookListInstanceSerializer, UserListInstanceSerializer
+from library.serializers import UserReadSerializer, UserReadingSerializer, UserWantToReadSerializer, UserProfileSerializer, FeaturedBooksSerializer, NoteListInstanceSerializer, BookListInstanceSerializer, UserListInstanceSerializer
 
 
 '''
@@ -12,7 +12,7 @@ user viewsets
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     '''
-    receives and returns request for hopefully only username
+    receives and returns request for list of only username
     '''
     queryset = User.objects.values('username')
     serializer_class = UserListInstanceSerializer
@@ -21,43 +21,40 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
 class UserProfileViewSet(viewsets.ReadOnlyModelViewSet):
     '''
-    receives and returns request for all User objects
+    receives and returns request for all User attributes
     '''
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
 
-    # def get_queryset(self):
-    #     return self.request.user.all()
+
+class UserReadViewSet(viewsets.ModelViewSet):
+    '''
+    filters Status model for signed in user and for attribute read=True
+    '''
+    serializer_class = UserReadSerializer
+
+    def get_queryset(self):
+        return self.request.user.user_relation_to_status.filter(read=True)
 
 
-# class UserReadViewSet(viewsets.ModelViewSet):
-#     '''
-#     filters Status model for signed in user and for attribute read=True
-#     '''
-#     serializer_class = UserReadSerializer
+class UserReadingViewSet(viewsets.ModelViewSet):
+    '''
+    filters Status model for signed in user and for attribute reading=True
+    '''
+    serializer_class = UserReadingSerializer
 
-#     def get_queryset(self):
-#         return self.request.user.user_relation_to_status.filter(read=True)
-
-
-# class UserReadingViewSet(viewsets.ModelViewSet):
-#     '''
-#     filters Status model for signed in user and for attribute reading=True
-#     '''
-#     serializer_class = UserReadingSerializer
-
-#     def get_queryset(self):
-#         return self.request.user.user_relation_to_status.filter(reading=True)
+    def get_queryset(self):
+        return self.request.user.user_relation_to_status.filter(reading=True)
 
 
-# class UserWantToReadViewSet(viewsets.ModelViewSet):
-#     '''
-#     filters Status model for signed in user attribute want_to_read=True
-#     '''
-#     serializer_class = UserWantToReadSerializer
+class UserWantToReadViewSet(viewsets.ModelViewSet):
+    '''
+    filters Status model for signed in user attribute want_to_read=True
+    '''
+    serializer_class = UserWantToReadSerializer
 
-#     def get_queryset(self):
-#         return self.request.user.user_relation_to_status.filter(want_to_read=True)
+    def get_queryset(self):
+        return self.request.user.user_relation_to_status.filter(want_to_read=True)
 
 
 '''
