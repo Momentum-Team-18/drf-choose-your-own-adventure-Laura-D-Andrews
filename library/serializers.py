@@ -8,7 +8,8 @@ class NoteListInstanceSerializer(serializers.HyperlinkedModelSerializer):
     '''
     class Meta:
         model = Note
-        fields = ['url', 'note_title', 'public_note_text', 'book', 'user']
+        fields = ['url', 'note_title', 'note_text',
+                  'book', 'commenter', 'privacy']
 
 
 class BookListInstanceSerializer(serializers.HyperlinkedModelSerializer):
@@ -24,20 +25,10 @@ class UserListInstanceSerializer(serializers.HyperlinkedModelSerializer):
     '''
     Basic list serializer for User model, view filters to only User model username
     '''
+
     class Meta:
         model = User
-        fields = ['username', 'last_name']
-
-
-# class UserListInstanceSerializer(serializers.HyperlinkedModelSerializer):
-#     '''
-#     Basic list serializer for User model, view filters to only User model username
-#     '''
-#     class Meta:
-#         model = User
-#         fields = ['username', 'last_name']
-
-# need to add public notes and filter for only username?
+        fields = ['username', 'last_name', 'comments']
 
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
@@ -46,7 +37,8 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
     '''
     class Meta:
         model = User
-        exclude = ['password']
+        exclude = ['is_staff', 'is_active',
+                   'groups', 'user_permissions', 'password']
 # need to add public and private notes and books and restrict permissions so that only user can see their profile
 
 

@@ -18,17 +18,19 @@ class Book(models.Model):
 
 
 class Note(models.Model):
-    user = models.ForeignKey(
+
+    PRIVACY_CHOICES = [(False, 'Private'), (True, 'Public')]
+    commenter = models.ForeignKey(
         to='User', on_delete=models.CASCADE,
         related_name='user_related_to_note')
     note_title = models.CharField(max_length=100, verbose_name="title")
     book = models.ForeignKey(
         to=Book, on_delete=models.CASCADE,
         related_name='book_related_to_note')
-    private_note_text = models.TextField(
-        null=True, blank=True, verbose_name="Public comments")
-    public_note_text = models.TextField(
-        null=True, blank=True, verbose_name="Private comments")
+    note_text = models.TextField(
+        null=True, blank=True)
+    privacy = models.BooleanField(
+        default=False, null=True, blank=True, choices=PRIVACY_CHOICES)
 
     def __str__(self):
         return self.note_title
@@ -36,6 +38,7 @@ class Note(models.Model):
 
 class User(AbstractUser):
     following = models.ManyToManyField(Book, blank=True, null=True)
+    comments = models.ManyToManyField(Note, blank=True, null=True)
 
 
 class Status(models.Model):
