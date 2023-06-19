@@ -79,8 +79,6 @@ class BookViewSet(viewsets.ModelViewSet):
     serializer_class = BookListInstanceSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
 
-# on render author and title filter working
-
 
 class FeaturedBooksViewSet(viewsets.ModelViewSet):
     '''

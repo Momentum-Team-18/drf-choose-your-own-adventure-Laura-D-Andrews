@@ -50,7 +50,7 @@ if env('RENDER'):
 # Application definition
 
 INSTALLED_APPS = [
-    'registration',
+    'drf_registration',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -154,6 +154,12 @@ LOGIN_REDIRECT_URL = '/'
 AUTH_USER_MODEL = 'library.User'
 
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 10,
 }
+AUTHENTICATION_BACKENDS = [
+    'drf_registration.auth.MultiFieldsModelBackend',
+]

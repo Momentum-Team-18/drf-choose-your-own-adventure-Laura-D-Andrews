@@ -23,6 +23,6 @@ router.register(r'user/want', views.UserWantToReadViewSet,
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
-    path('accounts/', include('registration.backends.simple.urls')),
+    path('/api/accounts/', include('drf_registration.urls')),
     path('', include(router.urls)),
 ]
