@@ -6,6 +6,11 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from library.serializers import UserReadSerializer, UserReadingSerializer, UserWantToReadSerializer, UserProfileSerializer, FeaturedBooksSerializer, NoteListInstanceSerializer, BookListInstanceSerializer, UserListInstanceSerializer
 
 
+class SearchFilter(filters.SearchFilter):
+    def get_search_fields(self, view, request):
+        return request.GET.getlist('search_fields', [])
+
+
 '''
 user viewsets
 '''
@@ -65,8 +70,10 @@ book view sets
 
 class BookViewSet(viewsets.ModelViewSet):
     '''
-    receives and returns request for all Book objects
+    receives and returns request for all Book objects, option to search/filter by author or title
     '''
+
+    filter_backends = (SearchFilter,)
     search_fields = ['author', 'book_title']
     filter_backends = (filters.SearchFilter,)
     queryset = Book.objects.all()
@@ -94,6 +101,8 @@ class NoteViewSet(viewsets.ModelViewSet):
     '''
     receives and returns request for all Note objects
     '''
+    search_fields = ['book__book_title']
+    filter_backends = (filters.SearchFilter,)
     queryset = Note.objects.all()
     serializer_class = NoteListInstanceSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
