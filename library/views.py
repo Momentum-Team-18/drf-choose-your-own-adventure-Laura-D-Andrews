@@ -1,6 +1,7 @@
 from rest_framework.decorators import action
 from rest_framework import viewsets
 from .models import User, Book, Note, Status
+from rest_framework import filters
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from library.serializers import UserReadSerializer, UserReadingSerializer, UserWantToReadSerializer, UserProfileSerializer, FeaturedBooksSerializer, NoteListInstanceSerializer, BookListInstanceSerializer, UserListInstanceSerializer
 
@@ -66,6 +67,8 @@ class BookViewSet(viewsets.ModelViewSet):
     '''
     receives and returns request for all Book objects
     '''
+    search_fields = ['author', 'book_title']
+    filter_backends = (filters.SearchFilter,)
     queryset = Book.objects.all()
     serializer_class = BookListInstanceSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
