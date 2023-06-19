@@ -22,5 +22,6 @@ router.register(r'user/want', views.UserWantToReadViewSet,
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('registration.backends.simple.urls')),
     path('', include(router.urls)),
 ]
