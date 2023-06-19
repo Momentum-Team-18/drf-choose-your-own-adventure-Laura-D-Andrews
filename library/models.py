@@ -12,6 +12,9 @@ class Book(models.Model):
     author = models.CharField(max_length=100)
     featured = models.BooleanField(default=False, choices=FEATURED_CHOICES)
     year = models.IntegerField(null=True, blank=True)
+    note = models.ForeignKey(
+        to='Note', on_delete=models.CASCADE,
+        related_name='note_related_to_book')
 
     def __str__(self):
         return self.book_title

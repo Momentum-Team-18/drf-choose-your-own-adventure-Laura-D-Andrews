@@ -22,10 +22,16 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 
 class UserProfileViewSet(viewsets.ReadOnlyModelViewSet):
     '''
-    receives and returns request for all User attribute fields in specified in serializer
+    receives and returns request for all User attribute fields specified in serializer, including private notes
     '''
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
+
+    def get_object(self):
+        return self.request.user
+
+    # def get_queryset(self):
+    #     return self.request.user.all()
 
 
 class UserReadViewSet(viewsets.ModelViewSet):
@@ -83,6 +89,7 @@ class FeaturedBooksViewSet(viewsets.ModelViewSet):
     filter_backends = (filters.SearchFilter,)
     search_fields = ['author', 'book_title']
     serializer_class = FeaturedBooksSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         featured_books = Book.objects.filter(featured=True)
@@ -103,3 +110,6 @@ class NoteViewSet(viewsets.ModelViewSet):
     queryset = Note.objects.all()
     serializer_class = NoteListInstanceSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get_queryset(self):
+        return Note.objects.filter(privacy=False)
