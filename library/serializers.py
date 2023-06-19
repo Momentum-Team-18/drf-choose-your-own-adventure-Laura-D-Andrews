@@ -28,7 +28,7 @@ class UserListInstanceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'last_name', 'comments']
+        fields = ['username']
 
 
 class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
@@ -38,8 +38,8 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         exclude = ['is_staff', 'is_active',
-                   'groups', 'user_permissions', 'password']
-# need to add public and private notes and books and restrict permissions so that only user can see their profile
+                   'groups', 'user_permissions', 'password', 'is_superuser']
+# restrict permissions
 
 
 class FeaturedBooksSerializer(serializers.HyperlinkedModelSerializer):

@@ -12,12 +12,11 @@ user viewsets
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     '''
-    receives and returns request for list of only username
+    receives and returns request for list of only users
     '''
-    # queryset = User.objects.values('username', 'note_text')
     queryset = User.objects.all()
     serializer_class = UserListInstanceSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
 
 class UserProfileViewSet(viewsets.ReadOnlyModelViewSet):
