@@ -1,10 +1,14 @@
 from .models import User, Book, Note, Status
 from rest_framework import serializers
 
+# LIST OUT GET?POST ETC
+
 
 class NoteListInstanceSerializer(serializers.HyperlinkedModelSerializer):
     '''
-    Basic serializer for Note model, filters for public notes, links to note list and note instance
+    Basic serializer for Note model
+    Filters for public notes
+    Links to note list and note instance
     '''
     class Meta:
         model = Note
@@ -14,42 +18,39 @@ class NoteListInstanceSerializer(serializers.HyperlinkedModelSerializer):
 
 class UserListInstanceSerializer(serializers.HyperlinkedModelSerializer):
     '''
-    Basic list serializer for User model, view filters to only User model username
+    Basic list serializer for User model
+    Admin access only
     '''
 
+    class Meta:
+        model = User
+        exclude = ['password']
+
+
+class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
+    '''
+    User profile serializer
+    '''
     class Meta:
         model = User
         fields = ['username']
 
 
-class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
-    '''
-    User profile serializer with all User model info
-    '''
-    class Meta:
-        model = User
-        exclude = ['is_staff', 'is_active',
-                   'groups', 'user_permissions', 'password', 'is_superuser']
-# restrict permissions
-
-
 class BookListInstanceSerializer(serializers.HyperlinkedModelSerializer):
     '''
-    Basic serializer for Book model, links to book list and book instance
+    Basic serializer for Book model
+    Links to book list and book instance
     '''
-    note = serializers.PrimaryKeyRelatedField(
-        queryset=Note.objects.all()
-    )
 
     class Meta:
         model = Book
         fields = ['url', 'book_title', 'author',
-                  'year', 'featured', 'note']
+                  'year', 'featured']
 
 
 class FeaturedBooksSerializer(serializers.HyperlinkedModelSerializer):
     '''
-    Serializer to display 'featured' books list filtered via view with boolean(featured=True)
+    Serializer to display 'featured' books list filtered for featured=True
     '''
     class Meta:
         model = Book
@@ -58,9 +59,8 @@ class FeaturedBooksSerializer(serializers.HyperlinkedModelSerializer):
 
 class UserReadSerializer(serializers.HyperlinkedModelSerializer):
     '''
-    Serializer to display book user has read
+    Serializer for books user has read
     '''
-
     class Meta:
         model = Status
         fields = ['read', 'user', 'book']
@@ -68,7 +68,7 @@ class UserReadSerializer(serializers.HyperlinkedModelSerializer):
 
 class UserReadingSerializer(serializers.HyperlinkedModelSerializer):
     '''
-    Serializer to display book user is reading
+    Serializer for books user is reading
     '''
     class Meta:
         model = Status
@@ -77,7 +77,7 @@ class UserReadingSerializer(serializers.HyperlinkedModelSerializer):
 
 class UserWantToReadSerializer(serializers.HyperlinkedModelSerializer):
     '''
-    Serializer to display book user wants to read
+    Serializer for books user wants to read
     '''
     class Meta:
         model = Status

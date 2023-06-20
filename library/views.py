@@ -1,8 +1,7 @@
-from rest_framework.decorators import action
 from rest_framework import viewsets
 from .models import User, Book, Note, Status
 from rest_framework import filters
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework import permissions
 from library.serializers import UserReadSerializer, UserReadingSerializer, UserWantToReadSerializer, UserProfileSerializer, FeaturedBooksSerializer, NoteListInstanceSerializer, BookListInstanceSerializer, UserListInstanceSerializer
 
 
@@ -13,32 +12,30 @@ user viewsets
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     '''
-    receives and returns request for list of users (only username specified in serializer)
+    Receives and returns request for list of users and user details
+    Only admin access
     '''
     queryset = User.objects.all()
     serializer_class = UserListInstanceSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [permissions.IsAdminUser]
 
 
 class UserProfileViewSet(viewsets.ReadOnlyModelViewSet):
     '''
-    receives and returns request for all User attribute fields specified in serializer, including private notes
+    Receives and returns request for all User attribute fields specified in serializer
+    Includes user private notes
     '''
-    queryset = User.objects.all()
     serializer_class = UserProfileSerializer
-
-    def get_object(self):
-        return self.request.user
-
-    # def get_queryset(self):
-    #     return self.request.user.all()
+    queryset = User.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class UserReadViewSet(viewsets.ModelViewSet):
     '''
-    filters Status model for signed in user and for attribute read=True
+    Filters Status model for signed in user and for attribute read=True
     '''
     serializer_class = UserReadSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         return self.request.user.user_relation_to_status.filter(read=True)
@@ -46,7 +43,7 @@ class UserReadViewSet(viewsets.ModelViewSet):
 
 class UserReadingViewSet(viewsets.ModelViewSet):
     '''
-    filters Status model for signed in user and for attribute reading=True
+    Filters Status model for signed in user and for attribute reading=True
     '''
     serializer_class = UserReadingSerializer
 
@@ -56,9 +53,10 @@ class UserReadingViewSet(viewsets.ModelViewSet):
 
 class UserWantToReadViewSet(viewsets.ModelViewSet):
     '''
-    filters Status model for signed in user attribute want_to_read=True
+    Filters Status model for signed in user attribute want_to_read=True
     '''
     serializer_class = UserWantToReadSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         return self.request.user.user_relation_to_status.filter(want_to_read=True)
@@ -71,23 +69,24 @@ book view sets
 
 class BookViewSet(viewsets.ModelViewSet):
     '''
-    receives and returns request for all Book objects, option to search/filter by book author or title
+    Receives and returns request for all Book objects
+    Option to search/filter by book author or title
     '''
+    serializer_class = BookListInstanceSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ['author', 'book_title']
     queryset = Book.objects.all()
-    serializer_class = BookListInstanceSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 
-class FeaturedBooksViewSet(viewsets.ModelViewSet):
+class FeaturedBooksViewSet(viewsets.ReadOnlyModelViewSet):
     '''
-    filters Book model for attribute featured = True , optional search/filter for book title or author
+    Filters Book model for attribute featured = True
+    Option search/filter for book title or author
     '''
+    serializer_class = FeaturedBooksSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ['author', 'book_title']
-    serializer_class = FeaturedBooksSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         featured_books = Book.objects.filter(featured=True)
@@ -101,13 +100,13 @@ note viewsets
 
 class NoteViewSet(viewsets.ModelViewSet):
     '''
-    receives and returns request for all Note objects, option to search/filter for book title
+    Receives and returns request for Note model
+    Option to search/filter for book title
     '''
+    serializer_class = NoteListInstanceSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ['book__book_title']
     queryset = Note.objects.all()
-    serializer_class = NoteListInstanceSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         return Note.objects.filter(privacy=False)

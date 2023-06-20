@@ -6,15 +6,13 @@ from django.contrib.auth.models import AbstractUser
 
 
 class Book(models.Model):
+
     FEATURED_CHOICES = [(False, 'No'), (True, 'Yes')]
 
     book_title = models.CharField(max_length=100, verbose_name="title")
     author = models.CharField(max_length=100)
     featured = models.BooleanField(default=False, choices=FEATURED_CHOICES)
     year = models.IntegerField(null=True, blank=True)
-    note = models.ForeignKey(
-        to='Note', on_delete=models.CASCADE,
-        related_name='note_related_to_book')
 
     def __str__(self):
         return self.book_title
@@ -23,6 +21,7 @@ class Book(models.Model):
 class Note(models.Model):
 
     PRIVACY_CHOICES = [(False, 'Private'), (True, 'Public')]
+
     commenter = models.ForeignKey(
         to='User', on_delete=models.CASCADE,
         related_name='user_related_to_note')
@@ -40,12 +39,15 @@ class Note(models.Model):
 
 
 class User(AbstractUser):
-    following = models.ManyToManyField(Book, blank=True, null=True)
-    comments = models.ManyToManyField(Note, blank=True, null=True)
+
+    def __str__(self):
+        return self.username
 
 
 class Status(models.Model):
+
     STATUS_CHOICES = [(False, 'No'), (True, 'Yes')]
+    
     follow_status = models.CharField(max_length=30, default='Follow Status')
     read = models.BooleanField(
         default=False, null=True, blank=True, choices=STATUS_CHOICES)
