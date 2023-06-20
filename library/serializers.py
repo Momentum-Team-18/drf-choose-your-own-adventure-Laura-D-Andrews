@@ -35,11 +35,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
     User profile list
     UserProfileViewSet
     '''
-    # notes = NoteListInstanceSerializer(read_only=True)
+    notes_by_commenter = NoteListInstanceSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = ['username']
+        fields = ['username', 'notes_by_commenter']
 # additional goal - have user notes and following(read/reading/want_to_read) show up
 
 
@@ -54,7 +54,7 @@ class BookListInstanceSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Book
         fields = ['url', 'book_title', 'author',
-                  'year', 'featured']
+                  'year', 'featured', 'notes_about_book']
 # additional goal - can see all user public comments in note detail
 
 

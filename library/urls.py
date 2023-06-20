@@ -13,7 +13,7 @@ router.register(r'users', views.UserViewSet,
                 basename='user'),
 router.register(r'featured/books', views.FeaturedBooksViewSet,
                 basename='featured-books')
-router.register(r'profile', views.UserProfileViewSet, basename='profile')
+router.register(r'profiles', views.UserProfileViewSet, basename='profiles')
 router.register(r'user/read', views.UserReadViewSet, basename='read')
 router.register(r'user/reading', views.UserReadingViewSet, basename='reading')
 router.register(r'user/want', views.UserWantToReadViewSet,

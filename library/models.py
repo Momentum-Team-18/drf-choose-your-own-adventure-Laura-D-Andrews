@@ -24,11 +24,11 @@ class Note(models.Model):
 
     commenter = models.ForeignKey(
         to='User', on_delete=models.CASCADE,
-        related_name='user_related_to_note')
-    note_title = models.CharField(max_length=100, verbose_name="title")
+        related_name='notes_by_commenter')
+    note_title = models.CharField(max_length=100)
     book = models.ForeignKey(
         to=Book, on_delete=models.CASCADE,
-        related_name='book_related_to_note')
+        related_name='notes_about_book')
     note_text = models.TextField(
         null=True, blank=True)
     privacy = models.BooleanField(
@@ -47,7 +47,7 @@ class User(AbstractUser):
 class Status(models.Model):
 
     STATUS_CHOICES = [(False, 'No'), (True, 'Yes')]
-    
+
     follow_status = models.CharField(max_length=30, default='Follow Status')
     read = models.BooleanField(
         default=False, null=True, blank=True, choices=STATUS_CHOICES)
