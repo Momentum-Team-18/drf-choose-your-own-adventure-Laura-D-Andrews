@@ -9,27 +9,6 @@ from library.serializers import UserReadSerializer, UserReadingSerializer, UserW
 user viewsets
 '''
 
-
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    '''
-    Receives and returns request for list of users and user details
-    Only admin access
-    '''
-    queryset = User.objects.all()
-    serializer_class = UserListInstanceSerializer
-    permission_classes = [permissions.IsAdminUser]
-
-
-class UserProfileViewSet(viewsets.ReadOnlyModelViewSet):
-    '''
-    Receives and returns request for all User attribute fields specified in serializer
-    Includes user private notes
-    '''
-    serializer_class = UserProfileSerializer
-    queryset = User.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
-
-
 class UserReadViewSet(viewsets.ModelViewSet):
     '''
     Filters Status model for signed in user and for attribute read=True
@@ -46,6 +25,7 @@ class UserReadingViewSet(viewsets.ModelViewSet):
     Filters Status model for signed in user and for attribute reading=True
     '''
     serializer_class = UserReadingSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         return self.request.user.user_relation_to_status.filter(reading=True)
@@ -62,10 +42,32 @@ class UserWantToReadViewSet(viewsets.ModelViewSet):
         return self.request.user.user_relation_to_status.filter(want_to_read=True)
 
 
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    '''
+    Receives and returns request for list of users and user details
+    Only admin access
+    '''
+    queryset = User.objects.all()
+    serializer_class = UserListInstanceSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+# additional goal - user can see their profile info (and have write permissions on some fields) but not other user profiles
+
+
+class UserProfileViewSet(viewsets.ReadOnlyModelViewSet):
+
+    # Receives and returns request for User object and fields specified in serializer
+
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+# additional goal - have user notes and following(read/reading/want_to_read) show up
+
+
 '''
 book view sets
 '''
-
 
 class BookViewSet(viewsets.ModelViewSet):
     '''
@@ -78,19 +80,24 @@ class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+# additional goal - can see all user public comments in note detail
+
 
 class FeaturedBooksViewSet(viewsets.ReadOnlyModelViewSet):
     '''
-    Filters Book model for attribute featured = True
-    Option search/filter for book title or author
+    Filters Book objects for attribute featured = True
+    Option to search/filter for book title or author
     '''
     serializer_class = FeaturedBooksSerializer
     filter_backends = (filters.SearchFilter,)
     search_fields = ['author', 'book_title']
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
         featured_books = Book.objects.filter(featured=True)
         return featured_books
+
+# additional goal - can see all user public comments in note detail
 
 
 '''
@@ -100,7 +107,8 @@ note viewsets
 
 class NoteViewSet(viewsets.ModelViewSet):
     '''
-    Receives and returns request for Note model
+    Receives and returns request for Note objects
+    Filters for Note objects with privacy=False (public notes)
     Option to search/filter for book title
     '''
     serializer_class = NoteListInstanceSerializer
@@ -110,3 +118,5 @@ class NoteViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Note.objects.filter(privacy=False)
+    
+# additional goal - filter for user's notes (private and public)
