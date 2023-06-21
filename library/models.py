@@ -54,13 +54,13 @@ class Status(models.Model):
     reading = models.BooleanField(
         default=False, null=True, blank=True, choices=STATUS_CHOICES)
     want_to_read = models.BooleanField(
-        default=False, verbose_name="Want to read", null=True, blank=True, choices=STATUS_CHOICES)
+        default=False, null=True, blank=True, choices=STATUS_CHOICES)
     user = models.ForeignKey(
         to='User', on_delete=models.CASCADE,
-        related_name='user_relation_to_status')
+        related_name='statuses_by_user')
     book = models.ForeignKey(
         to=Book, on_delete=models.CASCADE,
-        related_name='book_status')
+        related_name='statuses_of_books')
 
     def __str__(self):
         return self.follow_status

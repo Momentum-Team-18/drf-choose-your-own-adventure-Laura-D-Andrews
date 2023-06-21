@@ -40,7 +40,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'notes_by_commenter']
-# additional goal - have user notes and following(read/reading/want_to_read) show up
 
 
 class BookListInstanceSerializer(serializers.HyperlinkedModelSerializer):
